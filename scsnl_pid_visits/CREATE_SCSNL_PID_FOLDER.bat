@@ -16,9 +16,13 @@ set np_subj_data_path="%parent_dir%\output"
 ::user entered prompts
 ::numerical PID ONLY (9999)
 ::numerical visit number ONLY (1)
-set /p pid="Enter Subject's PID only(####):"
+set /p pid="Enter Subject's PID only (####):"
 set /p visit="Enter Subject's Visit Number (#):"
+ECHO Please confirm that you have entered the correct information
 
+ECHO PID: %pid%
+ECHO VISIT: %visit%
+pause
 ::the following folder structure represents the SCSNL PID-VISIT-ASSESSMENTS folder structure
 :: set main subject folder
 ::set visit specific folder based off of user entered value

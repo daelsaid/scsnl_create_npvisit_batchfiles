@@ -20,6 +20,12 @@ set np_subj_data_path="%parent_dir%\output"
 set /p pid="Enter Subject's PID only (####):"
 set /p tutoring_group="Enter Subject's tutoring group (spt or vnt):"
 
+ECHO Please confirm that you have entered the correct information
+
+ECHO PID: %pid%
+ECHO Tutoring Group: %tutoring_group%
+pause
+
  ::tutoring specific template folder
 set tutoring_group_template_dir="%main_tutoring_template_dir%\tutoring_%tutoring_group%"
 set main_subj_dir="%np_subj_data_path%\%pid%"
