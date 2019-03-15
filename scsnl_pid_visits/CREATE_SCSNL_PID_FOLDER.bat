@@ -7,7 +7,7 @@
 ::NP parent folder
 ::template folder
 :: output
-set parent_dir="C:\Users\daelsaid\Desktop\np_testing"
+set parent_dir="%HOMEPATH%\Desktop\np_testing"
 set np_subj_data_path="%parent_dir%\output"
 
 ::do not change below, all paths are relative to above
