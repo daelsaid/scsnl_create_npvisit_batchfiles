@@ -17,7 +17,7 @@ set np_subj_data_path="%parent_dir%\output"
 ::numerical visit number ONLY (1)
 set /p pid="Enter Subject's PID only (####):"
 set /p visit="Enter Subject's Visit Number (#):"
-set /p project="Enter project name (met,met_asd,adhd,math_fun,asd_memory,asd_whiz):"
+set /p project="Enter project name (met,met_asd,adhd,math_fun,asd_speech,asd_memory,asd_whiz):"
 ECHO Please confirm that you have entered the correct information and the project name is entered exactly as listed
 
 ECHO PID: %pid%
@@ -25,7 +25,7 @@ ECHO VISIT: %visit%
 ECHO PROJECT: %project%
 pause
 
-set np_fldr_template_path="%parent_dir%\np\%project%\%project%_np_template_folder"
+set np_fldr_template_path="C:\Users\daelsaid\Desktop\np_testing\np\%project%\%project%_np_template_folder"
 
 ::the following folder structure represents the SCSNL PID-VISIT-ASSESSMENTS folder structure
 :: set main subject folder
@@ -52,11 +52,8 @@ GOTO :rename_files
 :visit_not_initial
 
 if not exist "%main_subj_dir%\visit%visit%" ECHO creating visit %visit% dir
-pause
 md "%main_subj_dir%\visit%visit%"
-pause
 xcopy %np_fldr_template_path%\visit%visit% %np_subj_data_path%\%pid%\visit%visit% /E
-pause
 GOTO :rename_files
 
 

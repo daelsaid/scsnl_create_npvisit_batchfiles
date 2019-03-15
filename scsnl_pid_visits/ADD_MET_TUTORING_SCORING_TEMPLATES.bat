@@ -27,7 +27,7 @@ ECHO Tutoring Group: %tutoring_group%
 pause
 
  ::tutoring specific template folder
-set tutoring_group_template_dir="%main_tutoring_template_dir%\tutoring_%tutoring_group%"
+set tutoring_group_template_dir="%main_tutoring_template_dir%\%project%\%project%_np_template_folder\tutoring_%tutoring_group%"
 set main_subj_dir="%np_subj_data_path%\%pid%"
 set visit_dir="%main_subj_dir%\visit1"
 set lab_expir="%visit_dir%\assessments\lab_experiments"
