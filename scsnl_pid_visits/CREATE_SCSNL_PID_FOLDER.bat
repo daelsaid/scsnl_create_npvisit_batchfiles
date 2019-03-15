@@ -8,7 +8,6 @@
 ::template folder
 :: output
 set parent_dir="C:\Users\daelsaid\Desktop\np_testing"
-set np_fldr_template_path="%parent_dir%\np\np_template_folder"
 set np_subj_data_path="%parent_dir%\output"
 
 ::do not change below, all paths are relative to above
@@ -18,15 +17,19 @@ set np_subj_data_path="%parent_dir%\output"
 ::numerical visit number ONLY (1)
 set /p pid="Enter Subject's PID only (####):"
 set /p visit="Enter Subject's Visit Number (#):"
-ECHO Please confirm that you have entered the correct information
+set /p project="Enter project name (met,met_asd,adhd,math_fun,asd_memory,asd_whiz):"
+ECHO Please confirm that you have entered the correct information and the project name is entered exactly as listed
 
 ECHO PID: %pid%
 ECHO VISIT: %visit%
+ECHO PROJECT: %project%
 pause
+
+set np_fldr_template_path="%parent_dir%\np\%project%\%project%_np_template_folder"
+
 ::the following folder structure represents the SCSNL PID-VISIT-ASSESSMENTS folder structure
 :: set main subject folder
 ::set visit specific folder based off of user entered value
-
 set main_subj_dir="%np_subj_data_path%\%pid%"
 set visit_dir="%main_subj_dir%\visit%visit%"
 set lab="%visit_dir%\assessments\lab_experiments"
@@ -41,14 +44,22 @@ if "%visit%" NEQ "1" GOTO :visit_not_initial
 ::If PID folder already exists, skip the lines until you reach rename
 :: if PID does not exist, create PID folder and copy tmeplate folder structure + scoring templates into PID
 if not exist "%main_subj_dir%" ECHO PID FOLDER DOES NOT EXIST, CREATING PID FOLDER WITH TEMPLATES
-md "%main_subj_dir%"
-xcopy %np_fldr_template_path% %np_subj_data_path%\%pid% /E
+md "%main_subj_dir%\visit%visit%"
+xcopy %np_fldr_template_path%\visit%visit% %np_subj_data_path%\%pid%\visit%visit%\ /E
 GOTO :rename_files
 
 ::assumes that the folder has been created
 :visit_not_initial
-ECHO PID FOLDER EXISTS, REMOVING template SUFFIX FOR VISIT ENTERED
+
+if not exist "%main_subj_dir%\visit%visit%" ECHO creating visit %visit% dir
+pause
+md "%main_subj_dir%\visit%visit%"
+pause
+xcopy %np_fldr_template_path%\visit%visit% %np_subj_data_path%\%pid%\visit%visit% /E
+pause
 GOTO :rename_files
+
+
 
 :rename_files
 :: change directories for each relevant subfolder and replaces _template suffix with PID_VISIT
