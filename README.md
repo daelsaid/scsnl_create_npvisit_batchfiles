@@ -1,6 +1,7 @@
 # Neuropsych visit batch files
 various automation and standardization scripts to create project visits
 
+[GO TO WIKI FOR DETAILED INSTRUCTIONS!!](https://github.com/daelsaid/scsnl_create_npvisit_batchfiles/wiki)  
 
 #### Dir structure
 
