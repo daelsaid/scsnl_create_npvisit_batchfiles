@@ -14,6 +14,10 @@ set parent_dir=\\171.65.52.100\NeuroPsych
 set np_subj_data_path=%parent_dir%
 set np_comp_address=\\171.65.52.100
 
+
+REM set parent_dir="C:\Users\daelsaid\Desktop\np_testing"
+REM set np_subj_data_path="%parent_dir%\output"
+
 ::do not change below, all paths are relative to above
 ::user entered prompts
 ::numerical PID ONLY (9999)
@@ -29,16 +33,15 @@ set /p pid2="ENTER PID AGAIN TO CONTINUE (PIDS MUST MATCH OR PROGRAM WILL EXIT):
 set /p visit2="ENTER VISIT # AGAIN TO CONTINUE (VISITS MUST MATCH OR PROGRAM WILL EXIT):"
 
 if "%pid%" NEQ "%pid2%" GOTO :pid_visit_invalid
-if "%pid%"=="%pid2%" GOTO :continue
 if "%visit%" NEQ "%visit2%" GOTO :pid_visit_invalid
+if "%pid%"=="%pid2%" GOTO :continue
 if "%visit%"=="%visit2%" GOTO :continue
 
 :pid_visit_invalid
 
-ECHO YOU ENTERED 2 DIFFERENT PIDS: %pid% and %pid2%
-ECHO YOU ENTERED 2 DIFFERENT VISIT NUMBERS: VISIT %visit% and %visit2%
-ECHO PRESS ANY KEY TO CLOSE THE  PROGRAM.
-ECHO RESTART THE PROGRAM TO ENTER THE PARTICIPANTS CORRECT PID AND VISIT
+if "%pid%" NEQ "%pid2%" ECHO YOU ENTERED 2 DIFFERENT PIDS: %pid% and %pid2%, RESTART THE PROGRAM TO ENTER THE PARTICIPANTS CORRECT PID AND VISIT
+if "%visit%" NEQ "%visit2%" ECHO YOU ENTERED 2 DIFFERENT VISIT NUMBERS: VISIT %visit% and %visit2%, RESTART THE PROGRAM TO ENTER THE PARTICIPANTS CORRECT PID AND VISIT
+ECHO (PRESSING ANY KEY WILL CLOSE THE PROGRAM)
 pause
 GOTO :end
 
