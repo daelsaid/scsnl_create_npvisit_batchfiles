@@ -1,4 +1,4 @@
-@echo off0
+@echo off
 pushd "%~dp0"
 
 :: daelsaid 03142019
@@ -19,6 +19,7 @@ set project=met
 ::user entered prompts
 set /p pid="Enter Subject's PID only (####):"
 set /p tutoring_group="Enter Subject's tutoring group (spt or vnt):"
+set /p visit="Enter Subject's tutoring Visit Number (#):"
 
 set main_tutoring_template_dir=%parent_dir%\project_template_folders\%project%
 
@@ -26,15 +27,16 @@ ECHO Please confirm that you have entered the correct information
 
 ECHO PID: %pid%
 ECHO Tutoring Group: %tutoring_group%
+ECHO VISIT: %visit%
 pause
 
  ::tutoring specific template folder
 set tutoring_group_template_dir=%main_tutoring_template_dir%\tutoring_%tutoring_group%
 set main_subj_dir=%np_subj_data_path%\%pid%
-set visit_dir=%main_subj_dir%\visit1
+set visit_dir=%main_subj_dir%\visit%visit%
 set lab_expir=%visit_dir%\assessments\lab_experiments
 set tutoring_dir=%lab_expir%\tutoring
-set file_ending=%pid%_1
+set file_ending=%pid%_%visit%
 
 :: if tutoring folder already exists, skip commands and end
 if exist "%tutoring_dir%" GOTO :tutoring_dir_exists
@@ -51,7 +53,7 @@ ECHO RENAMING TUTORING TEMPLATES
 ren %lab_expir%\tutoring\*_template.* *_%file_ending%.*
 
 :tutoring_dir_exists
-ECHO TUTORING DIR ALREADY EXISTS
+ECHO TUTORING FOLDER ALREADY EXISTS
 ECHO "Please check tutoring folder!"
 pause
 :end
