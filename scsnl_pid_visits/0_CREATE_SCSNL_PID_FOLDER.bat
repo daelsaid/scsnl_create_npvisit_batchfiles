@@ -1,8 +1,7 @@
 @echo off
 pushd "%~dp0"
 
-::daelsaid 03142019
-
+::daelsaid 0402019
 ::------------------------
 
 ::paths to adjust below
@@ -13,10 +12,6 @@ pushd "%~dp0"
 set parent_dir=\\171.65.52.100\NeuroPsych
 set np_subj_data_path=%parent_dir%
 set np_comp_address=\\171.65.52.100
-
-
-REM set parent_dir="C:\Users\daelsaid\Desktop\np_testing"
-REM set np_subj_data_path="%parent_dir%\output"
 
 ::do not change below, all paths are relative to above
 ::user entered prompts
@@ -102,11 +97,9 @@ for %%apt in (followup) do (
 )
 goto :rename_files
 
-::If PID folder already exists, skip the lines until you reach rename
-:: if PID does not exist, create PID folder and copy tmeplate folder structure + scoring templates into PID
 
 :rename_files
-:: change directories for each relevant subfolder and replaces _template suffix with PID_VISIT
+:: replace _template suffix with PID_VISIT
 ren %lab%\*_template*.* *_%file_ending%.*
 ren %sa%\*_template*.* *_%file_ending%.*
 ren %questionnaire%\*_template*.* *_%file_ending%.*
