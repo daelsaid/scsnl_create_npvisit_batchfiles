@@ -14,10 +14,6 @@ set parent_dir=\\171.65.52.100\NeuroPsych
 set np_subj_data_path=%parent_dir%
 set np_comp_address=\\171.65.52.100
 
-
-REM set parent_dir="C:\Users\daelsaid\Desktop\np_testing"
-REM set np_subj_data_path="%parent_dir%\output"
-
 ::do not change below, all paths are relative to above
 ::user entered prompts
 ::numerical PID ONLY (9999)
