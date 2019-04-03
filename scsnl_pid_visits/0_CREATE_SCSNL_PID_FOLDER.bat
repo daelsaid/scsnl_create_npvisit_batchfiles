@@ -20,6 +20,7 @@ set /p project="Enter project name:(met,met_asd,adhd,math_fun,asd_speech,asd_mem
 ::if met entered as project, ask for appointment prompt
 if "%project%"=="met" set /p appointment="Enter the neuropsych appointment's timepoint (pre,post,followup):"
 
+::Confirmation of PID and visit entered, if invalid script will exit
 ECHO.
 set /p pid2="ENTER PID AGAIN TO CONTINUE (PIDS MUST MATCH OR PROGRAM WILL EXIT):"
 set /p visit2="ENTER VISIT # AGAIN TO CONTINUE (VISITS MUST MATCH OR PROGRAM WILL EXIT):"
@@ -50,9 +51,7 @@ pause
 set np_fldr_template_path=%parent_dir%\project_template_folders\%project%\%project%_np_template_folder
 
 ::the following folder structure represents the SCSNL PID-VISIT-ASSESSMENTS folder structure
-::set main subject folder
-::set visit specific folder based off of user entered value
-
+::all folders initialized for pid #
 set main_subj_dir=%np_subj_data_path%\%pid%
 set visit_dir=%main_subj_dir%\visit%visit%
 set lab=%visit_dir%\assessments\lab_experiments
@@ -69,13 +68,14 @@ md "%main_subj_dir%\visit%visit%"
 if "%project%"=="met" GOTO :met_project_structure
 
 ::for all studies but met, copy visit 1 folder into new PID/VISIT folder
-if not exist "%main_subj_dir%\visit%visit%" xcopy %np_fldr_template_path%\visit1 %main_subj_dir%\visit%visit% /E
+if not exist "%main_subj_dir%\visit%visit%\assessments" xcopy %np_fldr_template_path%\visit1 %main_subj_dir%\visit%visit% /E
 goto :rename_files
 
 ::met specfic structure
 :met_project_structure
 for %%a in (np1 np2 pre) do (
     if %appointment% equ %%a (
+        if exist
         xcopy %np_fldr_template_path%\visit1 %main_subj_dir%\visit%visit% /E
         goto :rename_files
     )
