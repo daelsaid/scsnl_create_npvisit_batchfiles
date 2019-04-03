@@ -1,33 +1,29 @@
 @echo off
 pushd "%~dp0"
 
-::daelsaid 03142019
+::daelsaid 04032019
 ::------------------------
 
-::paths to adjust below
-::NP parent folder
-::template folder
-
-:: output
 set parent_dir=\\171.65.52.100\NeuroPsych
 set np_subj_data_path=%parent_dir%
-set np_comp_address=\\171.65.52.100
 
 ::do not change below, all paths are relative to above
 ::user entered prompts
 ::numerical PID ONLY (9999)
 ::numerical visit number ONLY (1)
+::project name as listed in options
 
 set /p pid="Enter Subject's PID only (####):"
 set /p visit="Enter Subject's Visit Number (#):"
 set /p project="Enter project name:(met,met_asd,adhd,math_fun,asd_speech,asd_memory,asd_whiz):"
 
+::if met entered as project, ask for appointment prompt
 if "%project%"=="met" set /p appointment="Enter the neuropsych appointment's timepoint (pre,post,followup):"
+
 ECHO.
 set /p pid2="ENTER PID AGAIN TO CONTINUE (PIDS MUST MATCH OR PROGRAM WILL EXIT):"
 set /p visit2="ENTER VISIT # AGAIN TO CONTINUE (VISITS MUST MATCH OR PROGRAM WILL EXIT):"
 ECHO.
-
 
 if "%pid%" NEQ "%pid2%" GOTO :pid_visit_invalid
 if "%visit%" NEQ "%visit2%" GOTO :pid_visit_invalid
@@ -65,32 +61,34 @@ set questionnaire=%lab%\questionnaire
 set stand=%visit_dir%\assessments\standardized_experiments
 set file_ending=%pid%_%visit%
 
+::make sure pid and visit folder arent already made
 if not exist "%main_subj_dir%\visit%visit%" ECHO CREATING PID FOLDER FOLDER WITH TEMPLATES
 md "%main_subj_dir%\visit%visit%"
 
-if %project%=="met" GOTO :met_project_structure
+::if met was entered, skip to met specific section
+if "%project%"=="met" GOTO :met_project_structure
 
-xcopy %np_fldr_template_path%\visit1 %main_subj_dir%\visit%visit% /E
+::for all studies but met, copy visit 1 folder into new PID/VISIT folder
+if not exist "%main_subj_dir%\visit%visit%" xcopy %np_fldr_template_path%\visit1 %main_subj_dir%\visit%visit% /E
 goto :rename_files
 
-::if visit does not equal 1, begin runinng lines at visit not initial
-
+::met specfic structure
 :met_project_structure
-for %%apt in (np1 np2 pre) do (
+for %%a in (np1 np2 pre) do (
     if %appointment% equ %%a (
         xcopy %np_fldr_template_path%\visit1 %main_subj_dir%\visit%visit% /E
         goto :rename_files
     )
 )
 
-for %%apt in (post) do (
+for %%a in (post) do (
     if %appointment% equ %%a (
         xcopy %np_fldr_template_path%\visit2 %main_subj_dir%\visit%visit% /E
         goto :rename_files
     )
 )
 
-for %%apt in (followup) do (
+for %%a in (followup) do (
     if %appointment% equ %%a (
         xcopy %np_fldr_template_path%\visit3 %main_subj_dir%\visit%visit% /E
         goto :rename_files
@@ -98,11 +96,8 @@ for %%apt in (followup) do (
 )
 goto :rename_files
 
-::If PID folder already exists, skip the lines until you reach rename
-:: if PID does not exist, create PID folder and copy tmeplate folder structure + scoring templates into PID
-
 :rename_files
-:: change directories for each relevant subfolder and replaces _template suffix with PID_VISIT
+:: for each relevant subfolder and replaces _template suffix with PID_VISIT
 ren %lab%\*_template*.* *_%file_ending%.*
 ren %sa%\*_template*.* *_%file_ending%.*
 ren %questionnaire%\*_template*.* *_%file_ending%.*
