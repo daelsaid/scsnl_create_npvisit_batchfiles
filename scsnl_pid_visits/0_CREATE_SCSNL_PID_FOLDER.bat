@@ -1,7 +1,7 @@
 @echo off
 pushd "%~dp0"
 
-::daelsaid 0402019
+::daelsaid 03142019
 ::------------------------
 
 ::paths to adjust below
@@ -22,10 +22,12 @@ set /p pid="Enter Subject's PID only (####):"
 set /p visit="Enter Subject's Visit Number (#):"
 set /p project="Enter project name:(met,met_asd,adhd,math_fun,asd_speech,asd_memory,asd_whiz):"
 
-if "%project%"=="met" set /p appointment="Enter the neuropsych appointment name (np1,np2,pre,post,followup):"
-
+if "%project%"=="met" set /p appointment="Enter the neuropsych appointment's timepoint (pre,post,followup):"
+ECHO.
 set /p pid2="ENTER PID AGAIN TO CONTINUE (PIDS MUST MATCH OR PROGRAM WILL EXIT):"
 set /p visit2="ENTER VISIT # AGAIN TO CONTINUE (VISITS MUST MATCH OR PROGRAM WILL EXIT):"
+ECHO.
+
 
 if "%pid%" NEQ "%pid2%" GOTO :pid_visit_invalid
 if "%visit%" NEQ "%visit2%" GOTO :pid_visit_invalid
@@ -41,7 +43,6 @@ pause
 GOTO :end
 
 :continue
-
 ECHO Please confirm that you have entered the correct information and the project name is entered exactly as listed below
 
 ECHO PID: %pid%
@@ -53,7 +54,7 @@ pause
 set np_fldr_template_path=%parent_dir%\project_template_folders\%project%\%project%_np_template_folder
 
 ::the following folder structure represents the SCSNL PID-VISIT-ASSESSMENTS folder structure
-:: set main subject folder
+::set main subject folder
 ::set visit specific folder based off of user entered value
 
 set main_subj_dir=%np_subj_data_path%\%pid%
@@ -97,9 +98,11 @@ for %%apt in (followup) do (
 )
 goto :rename_files
 
+::If PID folder already exists, skip the lines until you reach rename
+:: if PID does not exist, create PID folder and copy tmeplate folder structure + scoring templates into PID
 
 :rename_files
-:: replace _template suffix with PID_VISIT
+:: change directories for each relevant subfolder and replaces _template suffix with PID_VISIT
 ren %lab%\*_template*.* *_%file_ending%.*
 ren %sa%\*_template*.* *_%file_ending%.*
 ren %questionnaire%\*_template*.* *_%file_ending%.*
