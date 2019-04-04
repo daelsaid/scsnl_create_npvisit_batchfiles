@@ -61,21 +61,24 @@ set stand=%visit_dir%\assessments\standardized_experiments
 set file_ending=%pid%_%visit%
 
 ::make sure pid and visit folder arent already made
-if not exist "%main_subj_dir%\visit%visit%" ECHO CREATING PID FOLDER FOLDER WITH TEMPLATES
-md "%main_subj_dir%\visit%visit%"
 
+if exist "%main_subj_dir%\visit%visit%" GOTO :visit_folder_exists
+if not exist "%main_subj_dir%\visit%visit%" GOTO :make_folder_and_copy_templates
+
+:make_folder_and_copy_templates
+
+ECHO CREATING PID FOLDER FOLDER WITH TEMPLATES
+md "%main_subj_dir%\visit%visit%"
 ::if met was entered, skip to met specific section
 if "%project%"=="met" GOTO :met_project_structure
-
 ::for all studies but met, copy visit 1 folder into new PID/VISIT folder
-if not exist "%main_subj_dir%\visit%visit%\assessments" xcopy %np_fldr_template_path%\visit1 %main_subj_dir%\visit%visit% /E
+xcopy %np_fldr_template_path%\visit1 %main_subj_dir%\visit%visit% /E
 goto :rename_files
 
 ::met specfic structure
 :met_project_structure
 for %%a in (np1 np2 pre) do (
     if %appointment% equ %%a (
-        if exist
         xcopy %np_fldr_template_path%\visit1 %main_subj_dir%\visit%visit% /E
         goto :rename_files
     )
@@ -102,4 +105,16 @@ ren %lab%\*_template*.* *_%file_ending%.*
 ren %sa%\*_template*.* *_%file_ending%.*
 ren %questionnaire%\*_template*.* *_%file_ending%.*
 ren %stand%\*_template*.* *_%file_ending%.*
+GOTO :end
+
+:visit_folder_exists
+ECHO.
+ECHO THIS PARTICIPANT ALREADY HAS A VISIT %VISIT% FOLDER
+ECHO check the pid folder (%pid%) to make sure that you have entered the correct visit number and project name for this participant
+ECHO.
+ECHO you entered: %pid% %visit% %project%
+ECHO.
+ECHO (PRESSING ANY KEY WILL CLOSE THE PROGRAM)
+pause
+
 :end
