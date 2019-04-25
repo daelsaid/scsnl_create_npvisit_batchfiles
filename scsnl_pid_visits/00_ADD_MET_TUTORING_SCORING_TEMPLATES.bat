@@ -11,6 +11,7 @@ set np_subj_data_path=%parent_dir%
 ::user entered prompts
 ::numerical PID ONLY (9999)
 ::numerical visit number ONLY (1)
+::project name as listed in options
 
 set /p pid="Enter Subject's PID only (####):"
 set /p tutoring_group="Enter Subject's tutoring group (spt or vnt):"
@@ -73,7 +74,7 @@ GOTO :end
 
 :tutoring_folder_exists
 ECHO.
-ECHO THIS PARTICIPANT ALREADY HAS A TUTORING FOLDER IN %pid%'s VISIT %VISIT% FOLDER
+ECHO THIS PARTICIPANT (%pid%) ALREADY HAS A TUTORING FOLDER IN THE VISIT %VISIT% FOLDER
 ECHO Check the pid folder (%pid%) to make sure that you want have entered the correct visit number and project name for this participant.
 ECHO  Make sure you entered the correct visit number to create the tutoring folder.
 ECHO.
