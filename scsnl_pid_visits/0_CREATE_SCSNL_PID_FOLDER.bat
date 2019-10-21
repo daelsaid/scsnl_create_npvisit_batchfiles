@@ -15,10 +15,11 @@ set np_subj_data_path=%parent_dir%
 
 set /p pid="Enter Subject's PID only (####):"
 set /p visit="Enter Subject's Visit Number (#):"
-set /p project="Enter project name:(met,met_asd,adhd,math_fun,asd_speech,asd_memory,asd_whiz):"
+set /p project="Enter project name:(met,asd_met,adhd,math_fun,asd_speech,asd_memory,asd_whiz):"
 
 ::if met entered as project, ask for appointment prompt
 if "%project%"=="met" set /p appointment="Enter the neuropsych appointment's timepoint (pre,post,followup):"
+if "%project%"=="asd_met" set /p appointment="Enter the neuropsych appointment's timepoint (pre,post,followup):"
 
 ::Confirmation of PID and visit entered, if invalid script will exit
 ECHO.
@@ -45,7 +46,9 @@ ECHO Please confirm that you have entered the correct information and the projec
 ECHO PID: %pid%
 ECHO VISIT: %visit%
 ECHO PROJECT: %project%
-if "%project%"=="met" ECHO APPOINTMENT NAME: %appointment%
+if "%project%"=="met" ECHO TIMEPOINT NAME: %appointment%
+if "%project%"=="asd_met" ECHO TIMEPOINT NAME: %appointment%
+
 pause
 
 set np_fldr_template_path=%parent_dir%\project_template_folders\%project%\%project%_np_template_folder
@@ -71,12 +74,37 @@ ECHO CREATING PID FOLDER FOLDER WITH TEMPLATES
 md "%main_subj_dir%\visit%visit%"
 ::if met was entered, skip to met specific section
 if "%project%"=="met" GOTO :met_project_structure
+if "%project%"=="asd_met" GOTO :asd_met_project_structure
+
 ::for all studies but met, copy visit 1 folder into new PID/VISIT folder
 xcopy %np_fldr_template_path%\visit1 %main_subj_dir%\visit%visit% /E
 goto :rename_files
 
 ::met specfic structure
 :met_project_structure
+for %%a in (np1 np2 pre) do (
+    if %appointment% equ %%a (
+        xcopy %np_fldr_template_path%\visit1 %main_subj_dir%\visit%visit% /E
+        goto :rename_files
+    )
+)
+
+for %%a in (post) do (
+    if %appointment% equ %%a (
+        xcopy %np_fldr_template_path%\visit2 %main_subj_dir%\visit%visit% /E
+        goto :rename_files
+    )
+)
+
+for %%a in (followup) do (
+    if %appointment% equ %%a (
+        xcopy %np_fldr_template_path%\visit3 %main_subj_dir%\visit%visit% /E
+        goto :rename_files
+    )
+)
+goto :rename_files
+
+:asd_met_project_structure
 for %%a in (np1 np2 pre) do (
     if %appointment% equ %%a (
         xcopy %np_fldr_template_path%\visit1 %main_subj_dir%\visit%visit% /E
