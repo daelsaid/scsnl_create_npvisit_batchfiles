@@ -15,11 +15,17 @@ set np_subj_data_path=%parent_dir%
 
 set /p pid="Enter Subject's PID only (####):"
 set /p visit="Enter Subject's Visit Number (#):"
-set /p project="Enter project name:(met,asd_met,adhd,math_fun,asd_speech,asd_memory,asd_whiz):"
+set /p project="Enter project name:(aml,met,asd_met,met2,prt,adhd,asd_sl,ad_sl,math_fun,asd_speech,asd_memory,asd_whiz):"
 
 ::if met entered as project, ask for appointment prompt
 if "%project%"=="met" set /p appointment="Enter the neuropsych appointment's timepoint (pre,post,followup):"
 if "%project%"=="asd_met" set /p appointment="Enter the neuropsych appointment's timepoint (pre,post,followup):"
+if "%project%"=="met2" set /p appointment="Enter the neuropsych appointment's timepoint (pre,post,followup,followup2):"
+:: asd_sl entered as project, ask for type of subject prompt
+if "%project%"=="asd_sl" set /p subject_type="Enter the subject type(speaker,speaker_adult,listener):"
+
+:: ad_sl entered as project, ask for type of subject prompt
+if "%project%"=="ad_sl" set /p subject_type="Enter the subject type(speaker,listener):"
 
 ::Confirmation of PID and visit entered, if invalid script will exit
 ECHO.
@@ -46,13 +52,17 @@ ECHO Please confirm that you have entered the correct information and the projec
 ECHO PID: %pid%
 ECHO VISIT: %visit%
 ECHO PROJECT: %project%
+
 if "%project%"=="met" ECHO TIMEPOINT NAME: %appointment%
+if "%project%"=="met2" ECHO TIMEPOINT NAME: %appointment%
 if "%project%"=="asd_met" ECHO TIMEPOINT NAME: %appointment%
+if "%project%"=="asd_sl" ECHO SUBJECT TYPE: %subject_type%
+if "%project%"=="ad_sl" ECHO SUBJECT TYPE: %subject_type%
 
 pause
 
 set np_fldr_template_path=%parent_dir%\project_template_folders\%project%\%project%_np_template_folder
-
+ECHO %np_fldr_template_path%\asd_sl_%subject_type%\visit1
 ::the following folder structure represents the SCSNL PID-VISIT-ASSESSMENTS folder structure
 ::all folders initialized for pid #
 set main_subj_dir=%np_subj_data_path%\%pid%
@@ -74,7 +84,11 @@ ECHO CREATING PID FOLDER FOLDER WITH TEMPLATES
 md "%main_subj_dir%\visit%visit%"
 ::if met was entered, skip to met specific section
 if "%project%"=="met" GOTO :met_project_structure
+if "%project%"=="met2" GOTO :met2_project_structure
 if "%project%"=="asd_met" GOTO :asd_met_project_structure
+if "%project%"=="asd_sl" GOTO :asd_sl_project_structure
+if "%project%"=="ad_sl" GOTO :ad_sl_project_structure
+
 
 ::for all studies but met, copy visit 1 folder into new PID/VISIT folder
 xcopy %np_fldr_template_path%\visit1 %main_subj_dir%\visit%visit% /E
@@ -104,6 +118,37 @@ for %%a in (followup) do (
 )
 goto :rename_files
 
+::met2 specfic structure
+:met2_project_structure
+for %%a in (np1 np2 pre) do (
+    if %appointment% equ %%a (
+        xcopy %np_fldr_template_path%\visit1 %main_subj_dir%\visit%visit% /E
+        goto :rename_files
+    )
+)
+
+for %%a in (post) do (
+    if %appointment% equ %%a (
+        xcopy %np_fldr_template_path%\visit2 %main_subj_dir%\visit%visit% /E
+        goto :rename_files
+    )
+)
+
+for %%a in (followup) do (
+    if %appointment% equ %%a (
+        xcopy %np_fldr_template_path%\visit3 %main_subj_dir%\visit%visit% /E
+        goto :rename_files
+    )
+)
+
+for %%a in (followup2) do (
+    if %appointment% equ %%a (
+        xcopy %np_fldr_template_path%\visit4 %main_subj_dir%\visit%visit% /E
+        goto :rename_files
+    )
+)
+goto :rename_files
+
 :asd_met_project_structure
 for %%a in (np1 np2 pre) do (
     if %appointment% equ %%a (
@@ -126,6 +171,25 @@ for %%a in (followup) do (
     )
 )
 goto :rename_files
+
+:asd_sl_project_structure
+for %%a in (speaker speaker_adult listener) do (
+    if %subject_type% equ %%a (
+        xcopy %np_fldr_template_path%\asd_sl_%subject_type%\visit1 %main_subj_dir%\visit%visit% /E
+        goto :rename_files
+    )
+)
+goto :rename_files
+
+:ad_sl_project_structure
+for %%a in (speaker listener) do (
+    if %subject_type% equ %%a (
+        xcopy %np_fldr_template_path%\ad_sl_%subject_type%\visit1 %main_subj_dir%\visit%visit% /E
+        goto :rename_files
+    )
+)
+goto :rename_files
+
 
 :rename_files
 :: for each relevant subfolder and replaces _template suffix with PID_VISIT
